@@ -14,17 +14,22 @@ export const AuthProvider = ({ children }) => {
 
     const setUser = (user) => {
         if (user) {
-            localStorage.setItem('user', JSON.stringify(user));
+            var ro = localStorage.setItem('user', JSON.stringify(user));
+            // console.log(ro);
         } else {
             localStorage.removeItem('user');
         }
         _setUser(user);
     }
 
+    // console.log(setUser);
+
     const csrfToken = async () => {
         await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie');
         return true;
     }
+
+    console.log(csrfToken);
 
     return (
         <AuthContent.Provider value={{ user, setUser, csrfToken}}>

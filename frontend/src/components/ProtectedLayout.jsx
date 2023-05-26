@@ -1,25 +1,29 @@
 import React, { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import axios from "../axios";
-import { useAuth } from "../contexts/AuthContext";
+import axiosss from '../axios';
+import { userAuth } from "../contexts/AuthContext";
 
 export default function DefaultLayout() {
-    const { user, setUser } = useAuth();
+    const { user, setUser } = userAuth();
+
+    // console.log(user);
 
     // check if user is logged in or not from server
     useEffect(() => {
         (async () => {
             try {
-                const resp = await axios.get("/user");
+                const resp = await axiosss.get("/user/details");
+                // console.log(resp);
                 if (resp.status === 200) {
                     setUser(resp.data.data);
                 }
             } catch (error) {
-                if (error.response.status === 401) {
-                    localStorage.removeItem("user");
-                    window.location.href = "/";
-                }
+                // console.log(error.response.status);
+                // if (error.response.status === 401) {
+                //     localStorage.removeItem("user");
+                //     window.location.href = "/";
+                // }
             }
         })();
     }, []);
@@ -32,7 +36,7 @@ export default function DefaultLayout() {
     // logout user
     const handleLogout = async () => {
         try {
-            const resp = await axios.post("/logout");
+            const resp = await axiosss.post("/logout");
             if (resp.status === 200) {
                 localStorage.removeItem("user");
                 window.location.href = "/";
