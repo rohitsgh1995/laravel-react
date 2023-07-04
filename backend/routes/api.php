@@ -19,11 +19,10 @@ use App\Http\Controllers\FileController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/uploadfile', [FileController::class, 'uploadFile']);
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user/details', [AuthController::class, 'userDetails']);
+    Route::post('/uploadfile', [FileController::class, 'uploadFile']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Files;
 use App\Http\Requests\FileRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FileController extends Controller
 {
@@ -24,7 +25,7 @@ class FileController extends Controller
                 if($upload)
                 {
                     Files::create([
-                        'user_id' => 1,
+                        'user_id' => Auth::user()->id,
                         'file' => $file,
                         'file_path' => $file_path
                     ]);

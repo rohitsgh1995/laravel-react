@@ -1,34 +1,45 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useState } from 'react';
-import axios from 'axios';
+import { useRef, useState } from 'react';
+import axios from '../axios';
 
 export default function Profile() {
 	const { user } = useAuth();
 
+	const aRef = useRef(null);
 	const [file, setFile] = useState();
 
 	function handleChange(event) {
 		setFile(event.target.files[0]);
 	};
 
-	function handleSubmit(event) {
-		event.preventDefault();
-		const url = 'http://localhost:8000/api/uploadfile';
+	const handleSubmit = async (e) => {
+		// console.log(file);
+		e.preventDefault();
 		const formData = new FormData();
+		// console.log(formData);
 		formData.append('file', file);
-		formData.append('fileName', file.name);
+		// console.log(formData.append('file', file));
+		formData.append('filename', file.name);
 		const config = {
 			headers: {
-				'content-type': 'multipart/form-data',
-			},
+				'content-type': 'multipart/form-data'
+			}
 		};
 
-		axios.post(url, formData, config).then((response) => {
-			console.log(response.data);
-		});
-	}
-
+		try {
+			const resp = await axios.post('uploadfile', formData, config);
+			if(resp.status === 200) {
+				console.log(resp.data);
+				aRef.current.value = null;
+			}
+		} catch (error) {
+			if(error.response.status === 401) {
+				setError(error.response.data.message)
+			}
+		}
+	};
+	
 	return (
 		<>
 			<div className="text-lg font-bold text-slate-600">User Profile</div>
@@ -44,7 +55,7 @@ export default function Profile() {
 			</div>
 			<form className="mt-8" onSubmit={handleSubmit}>
 				<h1 className='mb-3'>Upload File</h1>
-				<input type="file" onChange={handleChange}/>
+				<input ref={aRef} type="file" onChange={handleChange}/>
 				<button
 					type='submit'
 					className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
