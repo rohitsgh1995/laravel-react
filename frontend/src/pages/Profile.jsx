@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import axios from '../axios';
 
 export default function Profile() {
@@ -9,17 +9,16 @@ export default function Profile() {
 	const aRef = useRef(null);
 	const [file, setFile] = useState();
 
+	const [fileData, setFileData] = useState(null);
+
 	function handleChange(event) {
 		setFile(event.target.files[0]);
 	};
 
 	const handleSubmit = async (e) => {
-		// console.log(file);
 		e.preventDefault();
 		const formData = new FormData();
-		// console.log(formData);
 		formData.append('file', file);
-		// console.log(formData.append('file', file));
 		formData.append('filename', file.name);
 		const config = {
 			headers: {
@@ -32,6 +31,7 @@ export default function Profile() {
 			if(resp.status === 200) {
 				console.log(resp.data);
 				aRef.current.value = null;
+				getData();
 			}
 		} catch (error) {
 			if(error.response.status === 401) {
@@ -39,6 +39,16 @@ export default function Profile() {
 			}
 		}
 	};
+
+	async function getData() {
+		await axios.get('myfiles').then((response) => {
+			setFileData(response.data['data']);
+		});
+	};
+
+	useEffect(() => {
+		getData();
+	}, []);
 	
 	return (
 		<>
@@ -62,6 +72,13 @@ export default function Profile() {
 						Upload
 				</button>
 			</form>
+			<div className='mt-8 flex gap-5 items-center justify-center flex-wrap'>
+				{
+					fileData && fileData.map((item) => {
+						return <img key={item.id} src={'http://127.0.0.1:8000/' + item.file_path} style={{ width: '300px', height: 'auto'}} />
+					})
+				}
+			</div>
 		</>
 	);
 }

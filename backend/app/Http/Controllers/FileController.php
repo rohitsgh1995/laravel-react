@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Files;
 use App\Http\Requests\FileRequest;
 use Illuminate\Http\Request;
+use App\Http\Resources\FileResource;
 use Illuminate\Support\Facades\Auth;
 
 class FileController extends Controller
@@ -49,5 +50,10 @@ class FileController extends Controller
                 'message' => $th->getMessage()
             ], 500);
         }
+    }
+
+    public function getFiles()
+    {
+        return FileResource::collection(Files::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->get());
     }
 }
