@@ -3,6 +3,7 @@ import Login from './pages/Login';
 import About from './pages/About';
 import Weather from './pages/Weather';
 import Profile from './pages/Profile';
+import Files from './pages/Files';
 import Register from './pages/Register';
 import ProtectedLayout from './components/ProtectedLayout';
 import GuestLayout from './components/GuestLayout';
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
 			{
 				path: '/profile',
 				element: <Profile />,
+			},
+			{
+				path: '/files',
+				element: <Files />,
 			},
 		],
 	},

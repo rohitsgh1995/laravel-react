@@ -22,6 +22,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user/details', [AuthController::class, 'userDetails']);
+    Route::get('/user/files', [AuthController::class, 'userWithFiles']);
     Route::post('/uploadfile', [FileController::class, 'uploadFile']);
     Route::get('/myfiles', [FileController::class, 'getFiles']);
     Route::delete('/delete/file/{id}', [FileController::class, 'deleteFile']);

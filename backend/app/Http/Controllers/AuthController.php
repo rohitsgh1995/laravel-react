@@ -67,4 +67,9 @@ class AuthController extends Controller
     {
         return new UserResource($request->user());
     }
+
+    public function userWithFiles(Request $request)
+    {
+        return UserResource::collection(User::with('userFiles')->get());
+    }
 }

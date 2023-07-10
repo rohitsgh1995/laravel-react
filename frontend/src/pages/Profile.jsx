@@ -96,7 +96,7 @@ export default function Profile() {
 								<button onClick={() => handleDelete(item.id)} style={{position: 'absolute', top: '0', right: '0'}}>
 									<BiTrash style={{color: 'red'}} />
 								</button>
-								<img src={'http://127.0.0.1:8000/' + item.file_path} style={{ width: '150px', height: '100px', objectFit: 'contain'}} />
+								<img src={import.meta.env.VITE_STORAGE_BASE_URL + '/' + item.file_path} style={{ width: '150px', height: '100px', objectFit: 'contain'}} />
 							</div>
 						)
 					})
