@@ -6,18 +6,17 @@ import { BiTrash } from "react-icons/bi";
 
 export default function Profile() {
 	const { user } = useAuth();
-
 	const aRef = useRef(null);
-
 	const [file, setFile] = useState();
-
 	const [fileData, setFileData] = useState(null);
+	const [loading, setLoading] = useState(false);
 
 	function handleChange(event) {
 		setFile(event.target.files[0]);
 	};
 
 	const handleSubmit = async (e) => {
+		setLoading(true);
 		e.preventDefault();
 		const formData = new FormData();
 		formData.append('file', file);
@@ -33,10 +32,12 @@ export default function Profile() {
 			if(resp.status === 200) {
 				console.log(resp.data);
 				aRef.current.value = null;
+				setLoading(false);
 				getData();
 			}
 		} catch (error) {
 			if(error.response.status === 401) {
+				setLoading(false);
 				setError(error.response.data.message)
 			}
 		}
@@ -85,7 +86,7 @@ export default function Profile() {
 				<button
 					type='submit'
 					className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-						Upload
+						{loading ? <>Uploading..</> : <>Upload</>}
 				</button>
 			</form>
 			<div className='mt-8 flex gap-5 items-center justify-start flex-wrap'>
