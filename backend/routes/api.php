@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/details', [AuthController::class, 'userDetails']);
     Route::post('/uploadfile', [FileController::class, 'uploadFile']);
     Route::get('/myfiles', [FileController::class, 'getFiles']);
+    Route::delete('/delete/file/{id}', [FileController::class, 'deleteFile']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

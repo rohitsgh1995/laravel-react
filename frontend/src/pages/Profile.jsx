@@ -2,11 +2,13 @@ import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useRef, useState, useEffect } from 'react';
 import axios from '../axios';
+import { BiTrash } from "react-icons/bi";
 
 export default function Profile() {
 	const { user } = useAuth();
 
 	const aRef = useRef(null);
+
 	const [file, setFile] = useState();
 
 	const [fileData, setFileData] = useState(null);
@@ -49,6 +51,20 @@ export default function Profile() {
 	useEffect(() => {
 		getData();
 	}, []);
+
+	const handleDelete = async (id) => {
+		console.log(id);
+		
+		try {
+			const resp = await axios.delete('delete/file/' + id);
+			if(resp.status === 200) {
+				console.log(resp.data);
+				getData();
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}
 	
 	return (
 		<>
@@ -72,10 +88,17 @@ export default function Profile() {
 						Upload
 				</button>
 			</form>
-			<div className='mt-8 flex gap-5 items-center justify-center flex-wrap'>
+			<div className='mt-8 flex gap-5 items-center justify-start flex-wrap'>
 				{
 					fileData && fileData.map((item) => {
-						return <img key={item.id} src={'http://127.0.0.1:8000/' + item.file_path} style={{ width: '300px', height: 'auto'}} />
+						return (
+							<div key={'image' + item.id} style={{position: 'relative', width: '170px'}}>
+								<button onClick={() => handleDelete(item.id)} style={{position: 'absolute', top: '0', right: '0'}}>
+									<BiTrash style={{color: 'red'}} />
+								</button>
+								<img src={'http://127.0.0.1:8000/' + item.file_path} style={{ width: '150px', height: '100px', objectFit: 'contain'}} />
+							</div>
+						)
 					})
 				}
 			</div>
